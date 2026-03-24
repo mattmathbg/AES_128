@@ -19,7 +19,8 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="projet" targetName="projet" />
+      <config projectName="AES_128" targetName="test_aes" />
+      <config projectName="AES_128" targetName="aes_app" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -29,11 +30,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="331c0737-136b-4bb2-9e7d-9f1860f70f4a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_aes.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AES128.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/AES128.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AES128.h" beforeDir="false" afterPath="$PROJECT_DIR$/AES128.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MathGF256.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MathGF256.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Modes.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modes.h" beforeDir="false" afterPath="$PROJECT_DIR$/Modes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aes_app.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dechiffre.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message.txt" beforeDir="false" afterPath="$PROJECT_DIR$/message.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +86,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "CMake Application.aes_app.executor": "Run",
     "CMake Application.projet.executor": "Run",
+    "CMake Application.test_aes.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -94,6 +104,7 @@
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/mmath/Documents/L3/S6/crypto/AES_128",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -104,12 +115,31 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="projet" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="projet" TARGET_NAME="projet" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="projet" RUN_TARGET_NAME="projet">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mmath\Documents\L3\S6\crypto\AES_128" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.aes_app">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aes_app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AES_128" TARGET_NAME="aes_app" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AES_128" RUN_TARGET_NAME="aes_app">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="test_aes" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AES_128" TARGET_NAME="test_aes" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AES_128" RUN_TARGET_NAME="test_aes">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.aes_app" />
+      <item itemvalue="CMake Application.test_aes" />
+    </list>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -122,7 +152,7 @@
       <workItem from="1774010098055" duration="46000" />
       <workItem from="1774041070415" duration="2107000" />
       <workItem from="1774265551882" duration="2393000" />
-      <workItem from="1774295818227" duration="288000" />
+      <workItem from="1774295818227" duration="7894000" />
     </task>
     <servers />
   </component>

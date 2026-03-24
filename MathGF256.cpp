@@ -3,7 +3,7 @@
 //
 
 #include "MathGF256.h"
-#include "MathGF256.h"
+
 
 uint8_t xtime(uint8_t x) {
     //je verifie si le bit tout a gauche est 1 (0x80 => 10000000)
