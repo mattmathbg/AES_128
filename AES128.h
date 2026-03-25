@@ -24,9 +24,14 @@ private:
     void keyExpansion(const std::vector<uint8_t>& key);
 
     // Transformations d'une ronde
+
+    //Substitution octet par octet via la S-Box
     void subBytes(std::array<uint8_t, 16>& state) const;
+    //décalage cyclique des lignes de la matrice état
     void shiftRows(std::array<uint8_t, 16>& state) const;
+    //Mélange les colonnes (multiplication dans GF(2⁸))
     void mixColumns(std::array<uint8_t, 16>& state) const;
+    //XOR de l'état avec la clé de ronde courante
     void addRoundKey(std::array<uint8_t, 16>& state, int round) const;
 
     // Transformations inverses

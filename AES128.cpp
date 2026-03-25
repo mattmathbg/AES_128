@@ -46,10 +46,12 @@ static const uint8_t rcon[11] = {
     0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
 };
 
-
+//prend un bloc de 16 octets et le chiffre grace l'algorithme AES-128 
 void AES128::encryptBlock(std::array<uint8_t, 16>& state) const {
+    //XOR de l'état avec la clé de ronde 0 (la clé maître)
     addRoundKey(state, 0);
 
+    //9 rondes principales
     for (int round = 1; round <= 9; round++) {
         subBytes(state);
         shiftRows(state);
@@ -57,12 +59,16 @@ void AES128::encryptBlock(std::array<uint8_t, 16>& state) const {
         addRoundKey(state, round);
     }
 
+    //Ronde finale (sans mixColumns pour que le dechiffrement soit symetrique avec le chiffrement) 
     subBytes(state);
     shiftRows(state);
     addRoundKey(state, 10);
 }
 
+
+//génère les clés de ronde à partir de la clé maître
 void AES128::keyExpansion(const std::vector<uint8_t>& key) {
+    //copie d'abord les 16 octets de la clé maître
     for (int i = 0; i < 16; i++) {
         roundKeys[i] = key[i];
     }
@@ -71,6 +77,7 @@ void AES128::keyExpansion(const std::vector<uint8_t>& key) {
     int rconIndex = 1;
     uint8_t temp[4];
 
+    //genère les 10 clés de ronde suivantes 
     while (bytesGenerated < 176) {
         temp[0] = roundKeys[bytesGenerated - 4];
         temp[1] = roundKeys[bytesGenerated - 3];
@@ -78,34 +85,42 @@ void AES128::keyExpansion(const std::vector<uint8_t>& key) {
         temp[3] = roundKeys[bytesGenerated - 1];
 
         if (bytesGenerated % 16 == 0) {
+            //rotword : rotation circulaire à gauche
             uint8_t t = temp[0];
             temp[0] = temp[1];
             temp[1] = temp[2];
             temp[2] = temp[3];
             temp[3] = t;
 
+            //sbox : substitution octet par octet
             temp[0] = sbox[temp[0]];
             temp[1] = sbox[temp[1]];
             temp[2] = sbox[temp[2]];
             temp[3] = sbox[temp[3]];
 
+            //rcon : XOR avec la constante de ronde
             temp[0] ^= rcon[rconIndex];
             rconIndex++;
         }
 
+        //Pour trouver par exemple roundKeys[16], on fait XOR de temp avec roundKeys[0] (16 octets avant)
         roundKeys[bytesGenerated]     = roundKeys[bytesGenerated - 16] ^ temp[0];
         roundKeys[bytesGenerated + 1] = roundKeys[bytesGenerated - 15] ^ temp[1];
         roundKeys[bytesGenerated + 2] = roundKeys[bytesGenerated - 14] ^ temp[2];
         roundKeys[bytesGenerated + 3] = roundKeys[bytesGenerated - 13] ^ temp[3];
 
+        //on avance de 4 octets pour la prochaine itération (prochain mot de 4 octets à générer)
         bytesGenerated += 4;
     }
 }
 
+//constructeur qui prend la clé maître et génère les clés de ronde
 AES128::AES128(const std::vector<uint8_t>& key) {
     keyExpansion(key);
 }
 
+
+//prend un bloc de 16 octets chiffré et le déchiffre grâce à l'algorithme AES-128
 void AES128::decryptBlock(std::array<uint8_t, 16>& state) const {
     addRoundKey(state, 10);
     invShiftRows(state);
@@ -121,12 +136,14 @@ void AES128::decryptBlock(std::array<uint8_t, 16>& state) const {
     addRoundKey(state, 0);
 }
 
+//Substitution octet par octet via la S-Box
 void AES128::subBytes(std::array<uint8_t, 16>& state) const {
     for (int i = 0; i < 16; i++) {
         state[i] = sbox[state[i]];
     }
 }
 
+//XOR de l'état avec la clé de ronde courante
 void AES128::addRoundKey(std::array<uint8_t, 16>& state, int round) const {
     int offset = round * 16;
     for (int i = 0; i < 16; i++) {
@@ -134,6 +151,7 @@ void AES128::addRoundKey(std::array<uint8_t, 16>& state, int round) const {
     }
 }
 
+//Décalage cyclique des lignes de la matrice état
 void AES128::shiftRows(std::array<uint8_t, 16>& state) const {
     uint8_t temp;
 
@@ -162,6 +180,7 @@ void AES128::shiftRows(std::array<uint8_t, 16>& state) const {
     state[3] = temp;
 }
 
+//Mélange les colonnes 
 void AES128::mixColumns(std::array<uint8_t, 16>& state) const {
     for (int i = 0; i < 4; i++) {
         int c = i * 4;
@@ -178,13 +197,14 @@ void AES128::mixColumns(std::array<uint8_t, 16>& state) const {
     }
 }
 
+// Transformations inverses
 void AES128::invSubBytes(std::array<uint8_t, 16>& state) const {
     for (int i = 0; i < 16; i++) {
         state[i] = inv_sbox[state[i]];
     }
 }
 
-// ✅ CORRIGÉ : tous les indices state[n] étaient manquants
+//Décalage cyclique inverse des lignes de la matrice état
 void AES128::invShiftRows(std::array<uint8_t, 16>& state) const {
     uint8_t temp;
 
@@ -213,6 +233,8 @@ void AES128::invShiftRows(std::array<uint8_t, 16>& state) const {
     state[15] = temp;
 }
 
+
+//Mélange inverse des colonnes 
 void AES128::invMixColumns(std::array<uint8_t, 16>& state) const {
     for (int i = 0; i < 4; i++) {
         int c = i * 4;

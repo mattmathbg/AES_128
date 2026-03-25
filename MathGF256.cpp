@@ -19,6 +19,7 @@ uint8_t xtime(uint8_t x) {
     return resultat;
 }
 
+//Utiliser pour MixColumns 
 uint8_t multiply(uint8_t x, uint8_t y) {
     uint8_t res = 0;
     for (int i = 0; i < 8; i++) {
