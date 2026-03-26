@@ -181,6 +181,12 @@ std::vector<uint8_t> Modes::decryptCBC(const std::vector<uint8_t>& ciphertext, c
 
 
 // ─── CBC-MAC ─────────────────────────────────────────────────────────────────
+// CBC-MAC est la version sécurisée du MAC naïf ECB. Le principe est identique
+// au chiffrement CBC : chaque bloc est XORé avec le bloc chiffré précédent avant
+// d'être chiffré, créant ainsi une dépendance en chaîne entre tous les blocs.
+// Seul le dernier bloc chiffré est retourné comme tag. Contrairement à ECB-MAC,
+// modifier n'importe quel bloc du message, même au milieu, change forcément le
+// tag final car tous les blocs suivants en dépendent.
 
 std::vector<uint8_t> Modes::computeCBCMAC(const std::vector<uint8_t>& message, const AES128& aes, const std::array<uint8_t, 16>& iv) {
     std::vector<uint8_t> padded = pkcs7Pad(message);
