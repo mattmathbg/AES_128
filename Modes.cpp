@@ -80,6 +80,12 @@ std::vector<uint8_t> Modes::computeECBMAC(const std::vector<uint8_t>& message, c
     return std::vector<uint8_t>(lastBlock.begin(), lastBlock.end());
 }
 
+bool Modes::verifyECBMAC(const std::vector<uint8_t>& message,
+                          const std::vector<uint8_t>& tag,
+                          const AES128& aes) {
+    return Modes::computeECBMAC(message, aes) == tag;
+}
+
 // ─── CBC ─────────────────────────────────────────────────────────────────────
 
 std::vector<uint8_t> Modes::encryptCBC(const std::vector<uint8_t>& plaintext, const AES128& aes, const std::array<uint8_t, 16>& iv) {
@@ -119,6 +125,7 @@ std::vector<uint8_t> Modes::decryptCBC(const std::vector<uint8_t>& ciphertext, c
     return pkcs7Unpad(plaintext);
 }
 
+
 // ─── CBC-MAC ─────────────────────────────────────────────────────────────────
 
 std::vector<uint8_t> Modes::computeCBCMAC(const std::vector<uint8_t>& message, const AES128& aes, const std::array<uint8_t, 16>& iv) {
@@ -132,4 +139,11 @@ std::vector<uint8_t> Modes::computeCBCMAC(const std::vector<uint8_t>& message, c
     }
 
     return std::vector<uint8_t>(currentBlock.begin(), currentBlock.end());
+}
+
+bool Modes::verifyCBCMAC(const std::vector<uint8_t>& message,
+                          const std::vector<uint8_t>& tag,
+                          const AES128& aes,
+                          const std::array<uint8_t, 16>& iv) {
+    return Modes::computeCBCMAC(message, aes, iv) == tag;
 }
