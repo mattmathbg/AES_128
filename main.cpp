@@ -15,20 +15,22 @@ void printUsage() {
     std::cout << "  -e   Chiffrement" << std::endl;
     std::cout << "  -d   Dechiffrement" << std::endl;
     std::cout << "  -m   Calcul du MAC" << std::endl;
+    std::cout << "  -v   Verifier le MAC" << std::endl;
     std::cout << std::endl;
     std::cout << "Modes :" << std::endl;
     std::cout << "  -ecb   Electronic Code Book" << std::endl;
-    std::cout << "  -cbc   Cipher Block Chaining (iv_hex requis pour -e et -d)" << std::endl;
+    std::cout << "  -cbc   Cipher Block Chaining (iv_hex requis pour -e, -d, -m et -v)" << std::endl;
     std::cout << std::endl;
     std::cout << "Exemples :" << std::endl;
     std::cout << "  aes_app -e -ecb 2b7e151628aed2a6abf7158809cf4f3c message.txt cipher.bin" << std::endl;
     std::cout << "  aes_app -d -ecb 2b7e151628aed2a6abf7158809cf4f3c cipher.bin output.txt" << std::endl;
     std::cout << "  aes_app -m -ecb 2b7e151628aed2a6abf7158809cf4f3c message.txt mac.bin" << std::endl;
+    std::cout << "  aes_app -v -ecb 2b7e151628aed2a6abf7158809cf4f3c message.txt mac.bin" << std::endl;
     std::cout << "  aes_app -e -cbc 2b7e151628aed2a6abf7158809cf4f3c message.txt cipher.bin 000102030405060708090a0b0c0d0e0f" << std::endl;
     std::cout << "  aes_app -d -cbc 2b7e151628aed2a6abf7158809cf4f3c cipher.bin output.txt 000102030405060708090a0b0c0d0e0f" << std::endl;
-    std::cout << "  aes_app -m -cbc 2b7e151628aed2a6abf7158809cf4f3c message.txt mac.bin" << std::endl;
+    std::cout << "  aes_app -m -cbc 2b7e151628aed2a6abf7158809cf4f3c message.txt mac.bin 000102030405060708090a0b0c0d0e0f" << std::endl;
+    std::cout << "  aes_app -v -cbc 2b7e151628aed2a6abf7158809cf4f3c message.txt mac.bin 000102030405060708090a0b0c0d0e0f" << std::endl;
 }
-
 std::vector<uint8_t> hexToBytes(const std::string& hex) {
     std::vector<uint8_t> bytes;
     for (unsigned int i = 0; i + 1 < hex.length(); i += 2) {
@@ -118,6 +120,35 @@ int main(int argc, char* argv[]) {
             resultData = Modes::computeCBCMAC(inputData, aes, iv);
             printMAC("CBC-MAC", resultData);
         }
+        else if (action == "-v" && mode == "-cbc") {
+            std::array<uint8_t, 16> iv = parseIV(argc, argv);
+            std::ifstream tagFile(outputFile, std::ios::binary);
+            if (!tagFile) {
+                std::cerr << "Erreur : Impossible de lire le fichier tag." << std::endl;
+                return 1;
+            }
+            std::vector<uint8_t> tagData((std::istreambuf_iterator<char>(tagFile)), std::istreambuf_iterator<char>());
+            tagFile.close();
+            if (Modes::verifyCBCMAC(inputData, tagData, aes, iv)) {
+                std::cout << "Tag valide" << std::endl;
+            } else {
+                std::cout << "Tag invalide" << std::endl;
+            }
+        }
+        else if (action == "-v" && mode == "-ecb") {
+            std::ifstream tagFile(outputFile, std::ios::binary);
+            if (!tagFile) {
+                std::cerr << "Erreur : Impossible de lire le fichier tag." << std::endl;
+                return 1;
+            }
+            std::vector<uint8_t> tagData((std::istreambuf_iterator<char>(tagFile)), std::istreambuf_iterator<char>());
+            tagFile.close();
+            if (Modes::verifyECBMAC(inputData, tagData, aes)) {
+                std::cout << "Tag valide" << std::endl;
+            } else {
+                std::cout << "Tag invalide" << std::endl;
+            }
+        }
         else {
             std::cerr << "Action ou mode non supporte." << std::endl;
             printUsage();
@@ -128,13 +159,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::ofstream outFile(outputFile, std::ios::binary);
-    if (!outFile) {
-        std::cerr << "Erreur : Impossible d'ecrire dans le fichier " << outputFile << std::endl;
-        return 1;
+    if (action != "-v") {
+        std::ofstream outFile(outputFile, std::ios::binary);
+        if (!outFile) {
+            std::cerr << "Erreur : Impossible d'ecrire dans le fichier " << outputFile << std::endl;
+            return 1;
+        }
+        outFile.write(reinterpret_cast<const char*>(resultData.data()), resultData.size());
+        outFile.close();
     }
-    outFile.write(reinterpret_cast<const char*>(resultData.data()), resultData.size());
-    outFile.close();
 
     return 0;
 }

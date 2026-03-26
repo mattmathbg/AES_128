@@ -23,9 +23,17 @@ public:
     // MAC naïf ECB : chiffrement ECB du message, le dernier bloc chiffré est le tag
     static std::vector<uint8_t> computeECBMAC(const std::vector<uint8_t>& message, const AES128& aes);
 
+    static bool verifyECBMAC(const std::vector<uint8_t>& message,
+                          const std::vector<uint8_t>& tag,
+                          const AES128& aes);
+
     // Mode CBC-MAC - Génération du tag d'authentification
     static std::vector<uint8_t> computeCBCMAC(const std::vector<uint8_t>& message, const AES128& aes, const std::array<uint8_t, 16>& iv);
 
+    static bool verifyCBCMAC(const std::vector<uint8_t>& message,
+                          const std::vector<uint8_t>& tag,
+                          const AES128& aes,
+                          const std::array<uint8_t, 16>& iv);
 private:
     // Helpers PKCS#7
     static std::vector<uint8_t> pkcs7Pad(const std::vector<uint8_t>& data);

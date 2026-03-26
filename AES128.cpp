@@ -1,4 +1,7 @@
 #include "AES128.h"
+
+#include <stdexcept>
+
 #include "MathGF256.h"
 
 // Table de substitution (S-Box) de l'AES
@@ -116,8 +119,10 @@ void AES128::keyExpansion(const std::vector<uint8_t>& key) {
 
 //constructeur qui prend la clé maître et génère les clés de ronde
 AES128::AES128(const std::vector<uint8_t>& key) {
-    keyExpansion(key);
-}
+        if (key.size() != 16)
+            throw std::runtime_error("La clé doit faire exactement 16 octets.");
+        keyExpansion(key);
+    }
 
 
 //prend un bloc de 16 octets chiffré et le déchiffre grâce à l'algorithme AES-128
